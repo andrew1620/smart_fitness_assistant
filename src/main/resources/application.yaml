@@ -1,0 +1,32 @@
+spring:
+  application:
+    name: smartFitnessAssistant
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: ${POSTGRES_DB:jdbc:postgresql://localhost:5432/service-question}
+    username: ${POSTGRES_USER:postgres}
+    password: ${POSTGRES_PASSWORD:password}
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+  liquibase:
+    enabled: true
+    change-log: classpath:db/changelog/db.changelog-master.yml
+    default-schema: public
+    liquibase-schema: public
+    drop-first: false
+  security:
+    user:
+      password: none
+
+bot:
+  token: ${BOT_TOKEN}
+admin:
+  password: ${ADMIN_PASSWORD:123}
+  session-timeout-minutes: 120
+
+outbox-process-cron-time: ${OUTBOX_CRON_TIME:0 * * * * *}
