@@ -195,6 +195,26 @@ public class MessageOutputService {
                 "`/login " + password + "`\n\n";
     }
 
+    public String wrongCommandFormatMessage() {
+        return "❌ Неверный формат команды. Используйте: /login <пароль>";
+    }
+
+    public String successAuthenticationMessage() {
+        return "✅ Вы успешно авторизовались как администратор!\n\n" +
+                "Доступные команды:\n" +
+                "• /admin_stats - Статистика бота\n" +
+                "• /admin_users - Список пользователей\n" +
+                "• /admin_logout - Выйти";
+    }
+
+    public String wrongAdminPasswordMessage() {
+        return "❌ Неверный пароль администратора";
+    }
+
+    public String exitAdminMessage() {
+        return "👋 Вы вышли из режима администратора";
+    }
+
     public ReplyKeyboardMarkup getKeyboardForList(List<String> options) {
         var keyboard = new ReplyKeyboardMarkup();
         keyboard.setResizeKeyboard(true);

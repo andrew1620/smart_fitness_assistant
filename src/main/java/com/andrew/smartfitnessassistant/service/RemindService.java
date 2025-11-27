@@ -6,7 +6,6 @@ import com.andrew.smartfitnessassistant.dto.RemindDto;
 import com.andrew.smartfitnessassistant.entity.RemindEntity;
 import com.andrew.smartfitnessassistant.entity.UserEntity;
 import com.andrew.smartfitnessassistant.entity.WorkoutPlanEntity;
-import com.andrew.smartfitnessassistant.repository.OutboxEventRepository;
 import com.andrew.smartfitnessassistant.repository.RemindRepository;
 import com.andrew.smartfitnessassistant.service.event.TelegramEventPublisher;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -32,7 +31,6 @@ public class RemindService {
     private final TelegramEventPublisher telegramEventPublisher;
     private final MessageOutputService messageOutputService;
     private final WorkoutPlanService workoutPlanService;
-    private final OutboxEventRepository outboxEventRepository;
 
     public void processRemindEvent(String payload) {
         RemindDto remindDto = payloadToRemindDto(payload);
@@ -101,17 +99,11 @@ public class RemindService {
     }
     public RemindCommandDto parseRemindCommand(String fullCommand) {
         try {
-            // Проверяем, что команда начинается с /setRemind
             if (!fullCommand.startsWith("/setRemind")) {
                 throw new IllegalArgumentException("Команда должна начинаться с /setRemind");
             }
 
-            // Извлекаем аргументы (убираем "/setRemind")
             String arguments = fullCommand.substring("/setRemind".length()).trim();
-
-            if (arguments.isEmpty()) {
-                throw new IllegalArgumentException("Отсутствуют аргументы команды");
-            }
 
             return parseRemindArguments(arguments);
 

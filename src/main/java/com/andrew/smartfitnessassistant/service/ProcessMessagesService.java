@@ -15,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.util.List;
@@ -111,26 +110,22 @@ public class ProcessMessagesService {
 
         if (password.isEmpty()) {
             telegramEventPublisher.sendMessage(user.getTelegramChatId(),
-                    "❌ Неверный формат команды. Используйте: /login <пароль>");
+                    messageOutputService.wrongCommandFormatMessage());
             return;
         }
 
         if (adminService.authenticateAdmin(user, password)) {
             telegramEventPublisher.sendMessage(user.getTelegramChatId(),
-                    "✅ Вы успешно авторизовались как администратор!\n\n" +
-                            "Доступные команды:\n" +
-                            "• /admin_stats - Статистика бота\n" +
-                            "• /admin_users - Список пользователей\n" +
-                            "• /admin_logout - Выйти");
+                    messageOutputService.successAuthenticationMessage());
         } else {
             telegramEventPublisher.sendMessage(user.getTelegramChatId(),
-                    "❌ Неверный пароль администратора");
+                    messageOutputService.wrongAdminPasswordMessage());
         }
     }
 
     public void processAdminLogout(UserEntity user) {
         adminService.logoutAdmin(user.getTelegramChatId());
         telegramEventPublisher.sendMessage(user.getTelegramChatId(),
-                "👋 Вы вышли из режима администратора");
+                messageOutputService.exitAdminMessage());
     }
 }
