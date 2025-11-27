@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: fitness-postgres
+    environment:
+      POSTGRES_DB: service-question
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - fitness-network
+
+  app:
+    build: .
+    container_name: fitness-app
+    ports:
+      - "8080:8080"
+    environment:
+      POSTGRES_DB: jdbc:postgresql://postgres:5432/service-question
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123
+
+      BOT_TOKEN: ${BOT_TOKEN}
+      OUTBOX_CRON_TIME: "0 * * * * *"
+    depends_on:
+      - postgres
+    networks:
+      - fitness-network
+
+volumes:
+  postgres_data:
+
+networks:
+  fitness-network:
+    driver: bridge
